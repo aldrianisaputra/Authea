@@ -1,4 +1,4 @@
-# Authéa 
+# Authéa - Mini Project
 
 Authéa adalah aplikasi sistem login dan registrasi pengguna yang dibangun menggunakan Python, SQLite, dan Streamlit. Sistem ini dirancang sederhana, aman, dan memiliki tampilan yang bersih serta elegan.
 
