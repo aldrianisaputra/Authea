@@ -26,14 +26,21 @@ section[data-testid="stSidebar"] {
     background: white;
     border-right: 1px solid #eee;
 }
-
+#login-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
 /* Cards */
 .card {
-    padding: 20px;
-    border-radius: 15px;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .card1 { background: linear-gradient(45deg, #FF9A9E, #FAD0C4); }
@@ -44,6 +51,9 @@ section[data-testid="stSidebar"] {
 .stButton>button {
     border-radius: 10px;
     font-weight: bold;
+    background: linear-gradient(45deg, #FF4081, #FF6F91);
+    color: white;
+    align-self:center;
 }
 
 /* Download button */
@@ -147,7 +157,7 @@ def dashboard():
     # =====================
     elif menu == "Export Data":
 
-        st.title("📥 Export Data")
+        st.title("📥 Apa Data")
 
         if df.empty:
             st.warning("Tidak ada data untuk di export 😭")
@@ -162,7 +172,6 @@ def dashboard():
                 file_name="login_data.csv",
                 mime="text/csv"
             )
-
             # EXCEL
             import io
             buffer = io.BytesIO()
@@ -189,33 +198,59 @@ def dashboard():
 # =====================
 def auth_page():
 
-    st.title("🔐 Login App")
+    st.write("")
+    st.write("")
+    st.write("")
 
-    menu = ["Login", "Register"]
-    choice = st.sidebar.radio("Menu", menu)
+    col1, col2, col3 = st.columns([1,2,1])
 
-    if choice == "Register":
-        user = st.text_input("Username")
-        pw = st.text_input("Password", type="password")
+    with col2:
 
-        if st.button("Register"):
-            if register(user, pw):
-                st.success("Berhasil!")
-            else:
-                st.error("Username sudah ada!")
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
-    elif choice == "Login":
-        user = st.text_input("Username")
-        pw = st.text_input("Password", type="password")
+        if "page" not in st.session_state:
+            st.session_state.page = "login"
 
-        if st.button("Login"):
-            if login(user, pw):
-                st.session_state.login_status = True
-                st.session_state.username = user
+        if st.session_state.page == "login":
+
+            st.title("🔐 Login")
+
+            user = st.text_input("Username")
+            pw = st.text_input("Password", type="password")
+
+            if st.button("Login"):
+                if login(user, pw):
+                    st.toast("Login berhasil 🎉")
+                    st.session_state.login_status = True
+                    st.session_state.username = user
+                    st.rerun()
+                else:
+                    st.toast("Login gagal ❌")
+
+            if st.button("Belum punya akun? Register"):
+                st.session_state.page = "register"
                 st.rerun()
-            else:
-                st.error("Login gagal!")
 
+        else:
+
+            st.title("📝 Register")
+
+            user = st.text_input("Username")
+            pw = st.text_input("Password", type="password")
+
+            if st.button("Register"):
+                if register(user, pw):
+                    st.toast("Berhasil daftar 🎉")
+                    st.session_state.page = "login"
+                    st.rerun()
+                else:
+                    st.toast("Username sudah ada ❌")
+
+            if st.button("Sudah punya akun? Login"):
+                st.session_state.page = "login"
+                st.rerun()
+
+        st.markdown('</div>', unsafe_allow_html=True)
 # =====================
 # MAIN
 # =====================
